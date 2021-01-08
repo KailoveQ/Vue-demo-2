@@ -135,28 +135,35 @@ new Vue({
   data: function data() {
     return {
       users: [createUser('方方', '男'), createUser('若愚', '男'), createUser('茜茜', '女'), createUser('糖糖', '女')],
-      dpUsers: []
+      gender: ""
     };
   },
-  created: function created() {
-    this.dpUsers = this.users;
-  },
-  methods: {
-    showAll: function showAll() {
-      this.dpUsers = this.users;
-    },
-    showMale: function showMale() {
-      this.dpUsers = this.users.filter(function (u) {
-        return u.gender === '男';
-      });
-    },
-    showFemale: function showFemale() {
-      this.dpUsers = this.users.filter(function (u) {
-        return u.gender === "女";
-      });
+  computed: {
+    dpUsers: function dpUsers() {
+      var hash = {
+        male: "男",
+        female: "女"
+      };
+      var users = this.users,
+          gender = this.gender;
+
+      if (gender === "") {
+        return users;
+      } else if (typeof gender === "string") {
+        return users.filter(function (u) {
+          return u.gender === hash[gender];
+        });
+      } else {
+        throw new Error("gender 的值是以外的值");
+      }
     }
   },
-  template: "\n    <div>\n        <button @click=\"showAll\">\u5168\u90E8</button>\n        <button @click=\"showMale\">\u7537</button>\n        <button @click=\"showFemale\">\u5973</button>\n        <ul>\n            <li v-for=\"(u,index) in dpUsers\" :key=\"index\">{{u.name}} - {{u.gender}}</li>\n        </ul>\n    </div>\n    "
+  methods: {
+    setGender: function setGender(string) {
+      this.gender = string;
+    }
+  },
+  template: "\n    <div>\n        <button @click=\"setGender('')\">\u5168\u90E8</button>\n        <button @click=\"setGender('male')\">\u7537</button>\n        <button @click=\"setGender('female')\">\u5973</button>\n        <ul>\n            <li v-for=\"(u,index) in dpUsers\" :key=\"index\">{{u.name}} - {{u.gender}}</li>\n        </ul>\n    </div>\n    "
 }).$mount("#app");
 },{}]},{},["epB2"], null)
-//# sourceMappingURL=main.2d1f3b60.js.map
+//# sourceMappingURL=main.c961ece6.js.map

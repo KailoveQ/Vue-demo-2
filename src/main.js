@@ -15,28 +15,35 @@ new Vue ({
                 createUser('茜茜','女'),
                 createUser('糖糖','女')
             ],
-            dpUsers:[]
+            gender:""
         }
     },
-    created(){
-        this.dpUsers =this.users;
+    computed:{
+        dpUsers(){
+            const hash ={
+                male:"男",
+                female:"女"
+            }
+            const {users,gender} = this
+            if(gender === ""){
+                return users
+            }else if (typeof gender === "string"){
+                return users.filter(u =>u.gender===hash[gender])
+            }else {
+                throw new Error ("gender 的值是以外的值")
+            }
+        }
     },
     methods:{
-        showAll(){
-            this.dpUsers= this.users
-        },
-        showMale(){
-            this.dpUsers =this.users.filter(u =>u.gender==='男')
-        },
-        showFemale(){
-            this.dpUsers =this.users.filter(u =>u.gender==="女")
+        setGender(string){
+            this.gender =string
         }
     },
     template:`
     <div>
-        <button @click="showAll">全部</button>
-        <button @click="showMale">男</button>
-        <button @click="showFemale">女</button>
+        <button @click="setGender('')">全部</button>
+        <button @click="setGender('male')">男</button>
+        <button @click="setGender('female')">女</button>
         <ul>
             <li v-for="(u,index) in dpUsers" :key="index">{{u.name}} - {{u.gender}}</li>
         </ul>
